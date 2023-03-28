@@ -41,34 +41,30 @@ def stitcher():
     imgs = [cv2.imread(images['filename1']), cv2.imread(images['filename2'])]
     stitchy = cv2.Stitcher.create()
     (dummy, output) = stitchy.stitch(imgs)
-    print(output)
+    images['output'] = output
     if dummy != cv2.STITCHER_OK:
         print("stitching ain't successful")
     else:
         print('Your Panorama is ready!!!')
-
-    # final output
-    cv2.imshow('final result', output)
-
-    #cv2.imwrite(save_file, output)
-
-    # label0 = Label(frame0, image=output)
-    # label0.pack()
+    save_file()
+    cv2.imwrite(images['save_path'], output)
+    image = Image.open(images['save_path'])
+    # cv2.imwrite('final result.jpg', output)
+    # image = Image.open('C:/Users/Odmen/PycharmProjects/Stitcher/final result.jpg')
+    resize_image = image.resize((1080, 360))
+    img = ImageTk.PhotoImage(resize_image)
+    images['result'] = img
+    label0 = Label(frame0, image=images['result'])
+    label0.pack()
 
 
 def save_file():
     filetypes = (("Изображение", "*.jpg *.gif *.png *.jpeg"),
                  ("Любой", "*"))
-    filename = fd.asksaveasfilename(title="Сохранить", initialdir="/",
-                                    filetypes=filetypes)
-    images['result_filename'] = filename
-    image = Image.open(filename)
-    resize_image = image.resize((540, 360))
-    img = ImageTk.PhotoImage(resize_image)
-    images['result'] = img
-
-    label0 = Label(frame0, image=images['result'])
-    label0.pack()
+    save_path = fd.asksaveasfilename(title="Сохранить", initialdir="/",
+                                     filetypes=filetypes, defaultextension=".jpeg")
+    images['save_path'] = save_path
+    cv2.imwrite(images['save_path'], images['output'])
 
 window = Tk()
 window.title("Stitcher")
@@ -89,4 +85,3 @@ button0.place(relx=0.5, rely=0.5, anchor=CENTER)
 save_button = tkinter.Button(window, text="Сохранить", command=save_file)
 save_button.place(relx=0.5, rely=0.95, anchor=CENTER)
 window.mainloop()
-
