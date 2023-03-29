@@ -46,11 +46,9 @@ def stitcher():
         print("stitching ain't successful")
     else:
         print('Your Panorama is ready!!!')
-    save_file()
-    cv2.imwrite(images['save_path'], output)
-    image = Image.open(images['save_path'])
-    # cv2.imwrite('final result.jpg', output)
-    # image = Image.open('C:/Users/Odmen/PycharmProjects/Stitcher/final result.jpg')
+
+    cv2.imwrite('final result.jpg', output)
+    image = Image.open('final result.jpg')
     resize_image = image.resize((1080, 360))
     img = ImageTk.PhotoImage(resize_image)
     images['result'] = img
